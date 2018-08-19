@@ -1,0 +1,33 @@
+package cn.ssm.entity.zhuanye;
+
+import cn.ssm.entity.banji.Banji;
+
+public class ZhuanYe {
+	private int zid;
+	private String zName;
+	private Banji banji;
+	public int getZid() {
+		return zid;
+	}
+	public void setZid(int zid) {
+		this.zid = zid;
+	}
+	public String getzName() {
+		return zName;
+	}
+	public void setzName(String zName) {
+		this.zName = zName;
+	}
+	public Banji getBanji() {
+		return banji;
+	}
+	public void setBanji(Banji banji) {
+		this.banji = banji;
+	}
+	@Override
+	public String toString() {
+		return "ZhuanYe [zid=" + zid + ", zName=" + zName + ", banji=" + banji
+				+ "]";
+	}
+	
+}

@@ -1,0 +1,11 @@
+package cn.ssm.service.student;
+
+import java.util.List;
+
+import cn.ssm.entity.student.Student;
+
+public interface IStudentService {
+	
+	public List<Student> selectAll();
+
+}

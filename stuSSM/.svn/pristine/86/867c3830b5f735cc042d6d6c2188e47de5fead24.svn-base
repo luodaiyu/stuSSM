@@ -1,0 +1,67 @@
+package cn.ssm.controller.banji;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import cn.ssm.entity.banji.Banji;
+import cn.ssm.service.banji.IBanjiService;
+
+@Controller
+public class BanjiController {
+	
+	@Autowired
+	private IBanjiService banjiService;
+	
+	@RequestMapping(value="toBanjiList")
+	public String toBanjiList(HttpServletRequest req){
+		List<Banji> blist=banjiService.selectAll();
+		req.setAttribute("BanjiList",blist);
+		return "banjilist";
+	}
+    @RequestMapping(value="toBanjiView")
+    public String toBanjiView(int id,HttpServletRequest req){
+    	Banji banji=banjiService.getBanjiBYid(id);
+    	req.setAttribute("Banji", banji);
+    	return "banjiview";
+    }
+    @RequestMapping(value="doBanjiDelete")
+    public void doBanjiDelete(int id,HttpServletResponse resp){
+    	boolean boo=banjiService.deleteBanjiBYid(id);
+    	if(boo){
+    		try {
+				resp.getWriter().write("<script>alert('É¾³ý³É¹¦£¡');location.href='toBanjiList.do';</script>");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+    	}else{
+    		try {
+				resp.getWriter().write("<script>alert('É¾³ýÊ§°Ü£¡');location.href='toBanjiList.do';</script>");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+    	}
+    }
+    @RequestMapping(value="doBanjiDeleteBYList")
+    public void doBanjiDeleteBYList(String ids,HttpServletResponse resp){
+    	String id[]=ids.split(",");
+    	List<String> list=new ArrayList<String>();
+    	for(int i=0;i<id.length;i++){
+    		list.add(id[i]);
+    	}
+    	boolean boo=banjiService.deleteBanji(list);
+    	try {
+			resp.getWriter().write(boo+"");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+}

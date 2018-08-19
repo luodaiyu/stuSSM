@@ -1,0 +1,23 @@
+package cn.ssm.service.employee;
+
+import java.util.List;
+
+import cn.ssm.entity.employee.Employee;
+import cn.ssm.page.Page;
+
+public interface IEmployeeService {
+
+	public Employee denglu(Employee e);
+	
+	public List<Employee> selectEmployeeAll(Employee e);
+	
+	public boolean insertEmployee(Employee e);
+	
+	public boolean deleteEmployee(List<String> ids);
+	
+	public boolean deleteEmployeeOne(int id);
+	
+	public Employee getEmployeeByID(int id);
+	
+	public boolean updateEmployee(Employee e);
+}

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="cn.ssm.mapper.student.IStudentMapper">
+    <resultMap type="cn.ssm.entity.student.Student" id="StudentResultMap">
+        <result column="sid" property="sid" jdbcType="INTEGER"/>
+        <result column="sName" property="sName" jdbcType="VARCHAR"/>
+        <result column="sex" property="sex" jdbcType="VARCHAR"/>
+        <association property="banji" javaType="cn.ssm.entity.banji.Banji">
+           <id column="bid" property="bid"/>
+           <result column="bName" property="bname"/>
+        </association>
+        <association property="xueyuan" javaType="cn.ssm.entity.xueyuan.XueYuan">
+         <id column="xid" property="xid"/>
+         <result column="xName" property="xName"/>
+      </association>
+      <association property="zhuanye" javaType="cn.ssm.entity.zhuanye.ZhuanYe">
+         <id column="zid" property="zid"/>
+         <result column="zName" property="zName"/>
+      </association>
+    </resultMap>
+    
+    <select id="selectAll" resultMap="StudentResultMap">
+       select sid,sName,sex,bName,zName,xName from(select sid,sName,sex,sb.xid,bName,zName from(select sid,sName,sex,zid,s.xid,bName from s_student s,s_banji b where s.`bid`=b.`bid`)as sb,s_zhuanye z where sb.zid=z.`zid`)as sbz,s_xueyuan x where sbz.xid=x.`xid`
+    </select>
+    
+</mapper>

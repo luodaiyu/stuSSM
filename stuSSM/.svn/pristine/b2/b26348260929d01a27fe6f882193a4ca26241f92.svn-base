@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.ssm.mapper.teacher.ITeacherMapper">
+	<resultMap type="cn.ssm.entity.teacher.Teacher" id="TeacherResultMap">
+		<id column="tid" property="tid" jdbcType="INTEGER"/>
+		<result column="tName" property="tName" jdbcType="VARCHAR"/>
+		<result column="className" property="className" jdbcType="VARCHAR"/>
+		<result column="xid" property="xid" jdbcType="INTEGER"/>
+		<association property="xueyuan" javaType="cn.ssm.entity.xueyuan.XueYuan">
+			<id column="xid" property="xid"/>
+			<result column="xName" property="xName"/>
+			<result column="isdelete" property="isdelete"/>
+		</association>
+	</resultMap>
+	<select id="selectTeacherAll" resultMap="TeacherResultMap" resultType="List">
+		SELECT * FROM S_TEACHER ST,S_XUEYUAN SX WHERE ST.XID = SX.XID
+	</select>
+	<update id="updateTeacher" >
+		UPDATE S_TEACHER set TNAME=#{tName},className=#{className},xid=#{xid} where tid = #{tid}
+	</update>
+	<select id="getTeacherByID" parameterType="Integer" resultType="cn.ssm.entity.teacher.Teacher">
+		SELECT * FROM S_TEACHER where tid = #{tid}
+	</select>
+	<delete id="deleteTeacherOne" parameterType="Integer">
+		DELETE FROM S_TEACHER WHERE TID=#{tid}
+	</delete>
+	<insert id="insertTeacher" parameterType="cn.ssm.entity.teacher.Teacher">
+		INSERT INTO S_TEACHER (TNAME,CLASSNAME,XID) values (#{tName},#{className},#{xid})
+	</insert>
+</mapper>

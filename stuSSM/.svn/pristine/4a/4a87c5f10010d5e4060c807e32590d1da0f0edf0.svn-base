@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.ssm.mapper.zhuanye.IZhuanYeMapper">
+	<resultMap type="cn.ssm.entity.zhuanye.ZhuanYe" id="ZhuanYeMap">
+		<id column="zid" property="zid" jdbcType="INTEGER"/>
+		<result column="zName" property="zName" jdbcType="VARCHAR"/>
+		<association property="banji" javaType="cn.ssm.entity.banji.Banji">
+			<id column="bid" property="bid"/>
+			<result column="bName" property="bname"/>
+		</association>
+	</resultMap>
+	<select id="selectZhuanYeList" resultMap="ZhuanYeMap" resultType="List">
+		SELECT z.`zid`,z.`zName`,b.`bName` FROM s_zhuanye z,s_banji b WHERE b.bid=z.bid
+	</select>
+	<insert id="insertZhuanYe" parameterType="cn.ssm.entity.zhuanye.ZhuanYe">
+		INSERT INTO s_zhuanye(zName) VALUES(#{zName})
+	</insert>
+	
+	<select id="selectZhuanYeByName" parameterType="String" resultMap="ZhuanYeMap">
+		SELECT *FROM s_zhuanye WHERE zName=#{zName}
+	</select>
+	
+	
+</mapper>

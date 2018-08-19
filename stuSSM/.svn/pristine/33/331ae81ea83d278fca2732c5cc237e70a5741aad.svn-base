@@ -1,0 +1,10 @@
+package cn.ssm.service.menu;
+
+import java.util.List;
+
+import cn.ssm.entity.menu.Menu;
+
+public interface IMenuService {
+
+	public List<Menu> selectMenuByRID(int rid);
+}

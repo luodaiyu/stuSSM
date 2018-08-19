@@ -1,0 +1,123 @@
+<%@ page language="java" import="java.util.*" pageEncoding="utf-8" isELIgnored="false"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="js/jquery.js"></script>
+<script src="js/jquery.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  $(".click").click(function(){
+  $(".tip").fadeIn(200);
+  });
+  
+  $(".tiptop a").click(function(){
+  $(".tip").fadeOut(200);
+});
+
+  $(".sure").click(function(){
+  $(".tip").fadeOut(100);
+});
+
+  $(".cancel").click(function(){
+  $(".tip").fadeOut(100);
+});
+
+});
+</script>
+
+
+</head>
+
+
+<body>
+
+	<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+    <li><a href="#">首页</a></li>
+    <li><a href="#">系统管理</a></li>
+    <li><a href="#">菜单管理</a></li>
+    </ul>
+    </div>
+    
+    <div class="rightinfo">
+    
+    <div class="tools">
+    
+    	<ul class="toolbar">
+        <li class="click"><span><img src="images/t01.png" /></span><a href="">添加</a></li>
+        <li class="click"><span><img src="images/t02.png" /></span>修改</li>
+        <li id="delBtn"><span><img src="images/t03.png" /></span>删除</li>
+        </ul>
+        
+
+    </div>
+    
+    
+    <table class="tablelist">
+    	<thead>
+    	<tr>
+        <td><input name="" type="checkbox"/></td>
+        <td>项目编号<i class="sort"><img src="images/px.gif" /></i></td>
+        <td>项目名称</td>
+        <td>操作</td>
+        </tr>
+        </thead>
+        <tbody>
+        
+        <c:forEach items="${EMPLOYEE_LIST}" var="el">
+	        <tr>
+	        <td><input name="" type="checkbox" value="${el.id}"/></td>
+	        <td>${el.id}</td>
+	        <td>${el.userName}</td>
+	        <td>${el.roleName}</td>
+	        <td> <a href="#" class="tablelink">修改</a>   <a href="#" class="tablelink"> 删除</a></td>
+	        </tr> 
+        </c:forEach>
+        </tbody>
+    </table>
+    
+   
+    <div class="pagin">
+    <!--  
+    	<div class="message">共<i class="blue">${PAGE.count}</i>条记录，当前显示第&nbsp;<i class="blue">${PAGE.currPage}&nbsp;</i>页
+    	共<i class="blue">${PAGE.pageCount}</i>页
+    	</div>
+    	
+    	<ul class="paginList">
+        <li class="paginItem"><a href="toMenuListAction?currpage=1" style="width:50px">首页</a></li>
+        <c:if test="${PAGE.currPage <= 1}">
+        	  <li class="paginItem"><a href="toMenuListAction?currpage=1" style="width:50px">上一页</a></li>
+        </c:if>
+        <c:if test="${PAGE.currPage >1}">
+        	  <li class="paginItem"><a href="toMenuListAction?currpage=${PAGE.currPage-1}" style="width:50px">上一页</a></li>
+        </c:if>
+        
+        <c:if test="${PAGE.currPage < PAGE.pageCount}">
+                <li class="paginItem"><a href="toMenuListAction?currpage=${PAGE.currPage+1}" style="width:50px">下一页</a></li>
+        </c:if>
+        <c:if test="${PAGE.currPage >= PAGE.pageCount}">
+                <li class="paginItem"><a href="toMenuListAction?currpage=${PAGE.pageCount}" style="width:50px">下一页</a></li>
+        </c:if>
+ 
+        <li class="paginItem"><a href="toMenuListAction?currpage=${PAGE.pageCount}" style="width:50px">尾页</a></li>
+        
+        </ul>
+    	
+    	-->
+
+  </div>
+   
+    
+    <script type="text/javascript">
+	$('.tablelist tbody tr:odd').addClass('odd');
+	</script>
+
+</body>
+
+</html>

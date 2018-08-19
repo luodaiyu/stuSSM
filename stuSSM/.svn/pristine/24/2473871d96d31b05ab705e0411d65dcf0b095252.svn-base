@@ -1,0 +1,28 @@
+package cn.ssm.controller.menu;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import cn.ssm.entity.employee.Employee;
+import cn.ssm.entity.menu.Menu;
+import cn.ssm.service.menu.IMenuService;
+
+@Controller
+public class MenuController {
+
+	@Autowired
+	private IMenuService iMenuService;
+	@RequestMapping("/toleft")
+	public String toleft(HttpServletRequest request,HttpSession session){
+		Employee employee = (Employee) session.getAttribute("EMPLOYEE");
+		List<Menu> li = iMenuService.selectMenuByRID(employee.getRid());
+		request.setAttribute("MENU", li);
+		return "left";
+	}
+}

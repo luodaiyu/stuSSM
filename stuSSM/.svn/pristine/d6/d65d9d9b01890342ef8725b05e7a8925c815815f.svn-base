@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:util="http://www.springframework.org/schema/util" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:cache="http://www.springframework.org/schema/cache" xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx.xsd
+    http://www.springframework.org/schema/jdbc
+    http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+    http://www.springframework.org/schema/cache
+    http://www.springframework.org/schema/cache/spring-cache.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop.xsd
+    http://www.springframework.org/schema/util
+    http://www.springframework.org/schema/util/spring-util.xsd
+    http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.1.xsd
+    ">
+   	<context:annotation-config/>
+  	<context:component-scan base-package="cn.ssm.service"/>
+	<context:component-scan base-package="cn.ssm.mapper"/>
+	<!-- 配置事务管理 --> 
+    <bean name="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">       
+          <property name="dataSource" ref="dataSource"/>  
+    </bean>     
+ 	<!--  
+ 		propagation 属性可以填写的值
+ 		REQUIRED：支持当前事务，如果当前没有事务，就新建一个事务。这是最常见的选择。 
+		SUPPORTS：支持当前事务，如果当前没有事务，就以非事务方式执行。 
+		MANDATORY：支持当前事务，如果当前没有事务，就抛出异常。 
+		REQUIRES_NEW：新建事务，如果当前存在事务，把当前事务挂起。 
+		NOT_SUPPORTED：以非事务方式执行操作，如果当前存在事务，就把当前事务挂起。 
+		NEVER：以非事务方式执行，如果当前存在事务，则抛出异常。 
+		NESTED：支持当前事务，如果当前事务存在，则执行一个嵌套事务，如果当前没有事务，就新建
+ 	 -->
+ 	  <tx:advice id="iccardTxAdvice" transaction-manager="transactionManager">  
+        <tx:attributes>  
+          <tx:method name="delete*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.RuntimeException"/>  
+          <tx:method name="insert*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.RuntimeException" />  
+          <tx:method name="add*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.RuntimeException" />  
+          <tx:method name="create*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.RuntimeException" />  
+          <tx:method name="update*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.RuntimeException" />  
+          <tx:method name="save*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.RuntimeException" />  
+          <tx:method name="del*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.RuntimeException" />  
+                                  
+          <tx:method name="find*" propagation="SUPPORTS" />  
+          <tx:method name="get*" propagation="SUPPORTS" />  
+          <tx:method name="select*" propagation="SUPPORTS" />  
+          <tx:method name="query*" propagation="SUPPORTS" />  
+        </tx:attributes>  
+    </tx:advice>  
+     
+    <!-- 把事务控制在service层 -->  
+    <!-- 
+    	任意公共方法的执行：
+		execution(public * *(..))
+		任何一个以“set”开始的方法的执行：
+		execution(* set*(..))
+		AccountService 接口的任意方法的执行：
+		execution(* com.xyz.service.AccountService.*(..))
+		定义在service包里的任意方法的执行：
+		execution(* com.xyz.service.*.*(..))
+		定义在service包或者子包里的任意类的任意方法的执行：
+		execution(* com.xyz.service..*.*(..))
+    --> 
+    <aop:config>      
+        <aop:pointcut id="iccardTerm" expression="execution(* cn.service..*.*(..))" />  
+        <aop:advisor pointcut-ref="iccardTerm" advice-ref="iccardTxAdvice" />  
+    </aop:config> 
+	
+    <bean id="dataSource"  
+          class="org.apache.commons.dbcp.BasicDataSource"  
+          destroy-method="close">  
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>  
+
+
+
+
+        <property name="url" value="jdbc:mysql://192.168.1.122:3306/student_system?useUnicode=true&amp;characterEncoding=UTF-8"/>  
+        <property name="username" value="root"/>  
+        <property name="password" value="root"/>  
+        <!--maxActive: 最大连接数量-->    
+        <property name="maxActive" value="150"/>  
+        <!--minIdle: 最小空闲连接-->    
+        <property name="minIdle" value="5"/>  
+        <!--maxIdle: 最大空闲连接-->    
+        <property name="maxIdle" value="20"/>  
+        <!--initialSize: 初始化连接-->    
+        <property name="initialSize" value="1"/>  
+        <!-- 连接被泄露时是否打印 -->  
+        <property name="logAbandoned" value="true"/>  
+        <!--removeAbandoned: 是否自动回收超时连接-->    
+        <property name="removeAbandoned"  value="true"/>  
+        <!--removeAbandonedTimeout: 超时时间(以秒数为单位)-->    
+        <property name="removeAbandonedTimeout" value="10"/>  
+        <!--maxWait: 超时等待时间以毫秒为单位 1000等于60秒-->  
+        <property name="maxWait" value="1000"/>  
+        <!-- 在空闲连接回收器线程运行期间休眠的时间值,以毫秒为单位. -->  
+        <property name="timeBetweenEvictionRunsMillis" value="10000"/>  
+        <!--  在每次空闲连接回收器线程(如果有)运行时检查的连接数量 -->  
+        <property name="numTestsPerEvictionRun" value="10"/>  
+        <!-- 1000 * 60 * 30  连接在池中保持空闲而不被空闲连接回收器线程-->  
+        <property name="minEvictableIdleTimeMillis" value="10000"/>  
+    </bean>  
+	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+	<!-- 加载mybatis的核心配置文件 -->
+		<property name="configLocation" value="classpath:cn/config/mybatis-config.xml"></property>
+	<!-- 加载mybatis的sqlxml文件 -->
+		<property name="mapperLocations" value="classpath:cn/ssm/mapper/sqlxml/**/*.xml"></property>
+	 
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	
+	<!-- 通过自动扫描Mapper -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="cn.ssm.mapper"/>
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>  
+
+</beans>

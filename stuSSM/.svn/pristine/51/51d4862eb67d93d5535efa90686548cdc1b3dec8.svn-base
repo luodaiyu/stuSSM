@@ -1,0 +1,18 @@
+package cn.ssm.mapper.zhuanye;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import cn.ssm.entity.zhuanye.ZhuanYe;
+
+@Repository(value="iZhuanYeMapper")
+public interface IZhuanYeMapper {
+	
+	public List<ZhuanYe> selectZhuanYeList();
+	public int insertZhuanYe(ZhuanYe zhuanye);
+	public ZhuanYe selectZhuanYeByName(String zName);
+	public ZhuanYe selectZhuanYeByID(int zid);
+	public int updateZhuanYe(ZhuanYe zhuanye);
+	public int deleteZhuanYe(List<String> slist);
+}

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.ssm.mapper.employee.IEmployeeMapper">
+	<resultMap type="cn.ssm.entity.employee.Employee" id="EmployeeResultMap">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="userName" property="userName" jdbcType="VARCHAR"/>
+		<result column="passWord" property="passWord" jdbcType="VARCHAR"/>
+		<result column="rid" property="rid" jdbcType="INTEGER"/>
+		<result column="rName" property="rName" jdbcType="VARCHAR"/>
+	</resultMap>
+	<select id="denglu" resultMap="EmployeeResultMap" resultType="cn.ssm.entity.employee.Employee">
+		SELECT * FROM S_EMPLOYEE WHERE userName = #{userName} AND passWord=#{passWord}
+	</select>
+	<select id="selectEmployeeAll" resultMap="EmployeeResultMap" resultType="List">
+		SELECT * FROM S_EMPLOYEE SM,S_ROLE SR WHERE SR.RID = SM.RID
+		<if test="userName != null">
+			AND SM.userName LIKE('%${userName}%')
+		</if>
+	</select>
+	<insert id="insertEmployee" parameterType="cn.ssm.entity.employee.Employee">
+		INSERT INTO S_EMPLOYEE (USERNAME,PASSWORD,RID) VALUES (#{userName},#{passWord},#{rid})
+	</insert>
+	<delete id="deleteEmployee" parameterType="List">
+		DELETE FROM S_EMPLOYEE WHERE ID IN (
+	<foreach collection="list" item="entity" separator=",">#{entity}</foreach>
+		)
+	</delete>
+	<delete id="deleteEmployeeOne" parameterType="Integer">
+		DELETE FROM S_EMPLOYEE WHERE ID = #{id}
+	</delete>
+	<select id="getEmployeeGyID" parameterType="Integer" resultType="cn.ssm.entity.employee.Employee">
+		SELECT * FROM S_EMPLOYEE WHERE ID = #{id}
+	</select>
+	<update id="updateEmployee">
+		UPDATE S_EMPLOYEE SET userName=${userName},passWord=${passWord},RID=${rid} WHERE ID = ${id}
+	</update>
+</mapper>

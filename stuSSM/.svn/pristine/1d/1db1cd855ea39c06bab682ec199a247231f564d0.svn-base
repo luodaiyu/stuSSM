@@ -1,0 +1,26 @@
+package cn.ssm.entity.xueyuan;
+
+public class XueYuan {
+
+	private int xid;
+	private String xName;
+	
+	public int getXid() {
+		return xid;
+	}
+	public void setXid(int xid) {
+		this.xid = xid;
+	}
+	public String getxName() {
+		return xName;
+	}
+	public void setxName(String xName) {
+		this.xName = xName;
+	}
+	@Override
+	public String toString() {
+		return "XueYuan [xid=" + xid + ", xName=" + xName + "]";
+	}
+	
+	
+}

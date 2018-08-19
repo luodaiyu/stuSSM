@@ -1,0 +1,16 @@
+package cn.ssm.mapper.employee;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import cn.ssm.entity.employee.Employee;
+@Repository(value="iEmployeeMapper")
+public interface IEmployeeMapper {
+
+	public Employee denglu(Employee e);
+	
+	public List<Employee> selectEmployeeAll();
+	
+	public int insertEmployee(Employee e);
+}

@@ -1,0 +1,55 @@
+package cn.ssm.controller.student;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import cn.ssm.entity.student.Student;
+import cn.ssm.service.student.IStudentService;
+
+
+@Controller
+public class StudentController {
+	
+	@Autowired
+	private IStudentService studentService;
+	
+	@RequestMapping(value="toStudentList")
+	public String toStudentList(HttpServletRequest req){
+		List<Student> slist=studentService.selectAll();
+		req.setAttribute("StudentList", slist);
+		return "studentlist";
+	}
+	
+	@RequestMapping(value="toStudentView")
+	public String toStudentView(int id,HttpServletRequest req){
+		Student stu=studentService.selectView(id);
+		req.setAttribute("Student", stu);
+		return "studentview";
+	}
+	
+	@RequestMapping(value="doStudentDeleteBYid")
+	public void doStudentDeleteBYid(int id,HttpServletResponse resp){
+		boolean boo=studentService.deleteBYid(id);
+		if(boo){
+    		try {
+				resp.getWriter().write("<script>alert('É¾³ý³É¹¦');location.href='toStudentList.do';</script>");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+    	}else{
+    		try {
+				resp.getWriter().write("<script>alert('É¾³ýÊ§°Ü');location.href='toStudentList.do';</script>");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+    	}
+	}
+
+}

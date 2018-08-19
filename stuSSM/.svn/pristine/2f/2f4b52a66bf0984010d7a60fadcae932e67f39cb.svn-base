@@ -1,0 +1,67 @@
+$(function(){
+	var zName=$("#zName").val();
+	function checkzName(){
+		var fal=false;
+		
+		if(zName==""){
+			$("#zname").text("专业名称不能为空，且不能重复");
+			$("#zname").css('color','red');
+			fal=false;
+			
+		}
+		$.ajax({
+			type:'post',
+			url:'checkzName.do',
+			data:'zName='+zName,
+			async:false,
+			success:function(data){
+				if(data=="false"){
+					$("#zname").text("OK");
+					$("#zname").css('color','green');
+					fal=true;
+				}else{
+					$("#zname").text("专业名称不能重复");
+					$("#zname").css('color','red');
+					fal=false;
+				}
+			}
+		});
+		return fal;
+	}
+	
+	$("#zName").blur(function(){
+		checkzName();alert(checkzName());
+	});
+	$("#btn").click(function(){
+		$(".tip").fadeIn(200);
+		$(".sure").click(function(){
+			if(checkzName()){
+				$.ajax({
+					type:'post',
+					url:'doAddZhuanYe.do',
+					data:'zName='+$("#zName").val(),
+					ssync:false,
+					success:function(data){alert(data);
+						if(data == "true"){
+							$("#text").text("添加成功!");
+							$(".sure").unbind('click').click(function(){
+								location.href='toZhuanYeList.do';
+							});
+						}else{
+							$("#text").text("添加失败!");
+						}
+					}
+				});
+			}
+		});
+	});
+		$(".tiptop a").click(function(){
+			  $(".tip").fadeOut(200);
+		 });
+
+		 $(".cancel").click(function(){
+	 		 $(".tip").fadeOut(100);
+	  	 });	 
+
+	 
+});

@@ -1,0 +1,23 @@
+package cn.ssm.service.banji;
+
+import java.util.List;
+
+import cn.ssm.entity.banji.Banji;
+
+public interface IBanjiService {
+	
+	public List<Banji> selectAll();
+	
+	public Banji getBanjiBYid(int id);
+	
+	public boolean deleteBanjiBYid(int id);
+	
+	public boolean deleteBanji(List<String> list);
+	
+	public boolean insertBanji(Banji bj);
+	
+	public Banji getBanjiBYname(Banji bj);
+	
+	public boolean updateBanji(Banji bj);
+
+}

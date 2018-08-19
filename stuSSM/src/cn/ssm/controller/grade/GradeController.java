@@ -1,0 +1,272 @@
+package cn.ssm.controller.grade;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sf.json.JSONArray;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import cn.ssm.entity.banji.Banji;
+import cn.ssm.entity.grade.Grade;
+import cn.ssm.entity.grade.GradeList;
+import cn.ssm.entity.grade.queryXZB;
+import cn.ssm.entity.student.Student;
+import cn.ssm.entity.teacher.Teacher;
+import cn.ssm.entity.xueyuan.XueYuan;
+import cn.ssm.entity.zhuanye.ZhuanYe;
+import cn.ssm.page.Page;
+import cn.ssm.service.XueYuan.IXueYuanService;
+import cn.ssm.service.banji.IBanjiService;
+import cn.ssm.service.grade.IGradeService;
+import cn.ssm.service.student.IStudentService;
+import cn.ssm.service.zhuanye.IZhuanYeService;
+
+@Controller
+public class GradeController {
+	@Autowired
+	private IGradeService iGradeService;
+	@Autowired
+	private IBanjiService banjiService;
+	@Autowired
+	private IXueYuanService iXueYuanService;
+	@Autowired
+	private IZhuanYeService iZhuanYeService;
+	@Autowired
+	private IStudentService iStudentService;
+	@RequestMapping(value="/toQueryZXB")
+	public String toQueryZXB(Integer id1,Integer id2,Integer id3,HttpServletRequest request){
+		queryXZB xzb=new queryXZB();
+		xzb.setXid(id1);
+		xzb.setZid(id2);
+		xzb.setBid(id3);
+		request.getSession().setAttribute("xzb", xzb);
+		return "redirect:toGradeList.do";
+	}
+	@RequestMapping(value="/toGradeList")
+	public String toGradeList(HttpServletRequest request,Integer currpage){
+		if(currpage == null){
+			currpage = 1;
+		}
+		Page page = new Page();
+		page.setCurrentPage(currpage);
+		
+		queryXZB xzb=(queryXZB) request.getSession().getAttribute("xzb");
+		Map<String,Integer> params=new HashMap<String, Integer>();
+		//System.out.println(xzb.toString());
+		params.put("id1", 0);
+		params.put("id2", 0);
+		params.put("id3", 0);
+		if(xzb!=null){
+			if(xzb.getXid()==null){
+				xzb.setXid(0);
+			}
+			if(xzb.getZid()==null){
+				xzb.setZid(0);
+			}
+			if(xzb.getBid()==null){
+				xzb.setBid(0);
+			}
+			params.put("id1", xzb.getXid());
+			params.put("id2", xzb.getZid());
+			params.put("id3", xzb.getBid());
+		}
+		
+		
+		List<XueYuan> xyList=iXueYuanService.selectXueYuanAll();
+		request.setAttribute("XUEYUAN_LIST", xyList);
+		List<Grade> GradeAll=iGradeService.selectGradeList(params,page);
+		request.setAttribute("GRADEALL", GradeAll);
+		request.setAttribute("PAGE", page);
+		return "gradeList";
+	}
+	
+	
+	@RequestMapping(value="/toAddGrade")
+	public String toAddGrade(HttpServletRequest request){
+		return "addGrade";
+	}
+	@RequestMapping(value="/doAddGrade")
+	public void doAddGrade(Integer tid,Integer sid,Double chengji,HttpServletResponse response){
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("text/html");
+		Grade g=new Grade();
+		Teacher t=new Teacher();
+		t.setTid(tid);
+		Student s=new Student();
+		s.setSid(sid);
+		g.setTeacher(t);
+		g.setStudent(s);
+		g.setChengji(chengji);
+		boolean rs=iGradeService.insertGrade(g);
+		try {
+			PrintWriter out=response.getWriter();
+			if(rs){
+				out.write("<script>alert('添加成功！');location.href='toGradeList.do'</script>");
+			}else{
+				out.write("<script>alert('添加失败！');location.href='toAddGrade.do'</script>");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	@RequestMapping(value="/toUpdateGrade")
+	public String toUpdateGrade(Integer sid,Integer tid,HttpServletRequest request){
+		Map<String,Integer> params=new HashMap<String, Integer>();
+		params.put("sid", sid);
+		params.put("tid", tid);
+		GradeList grade=iGradeService.selectGradeCJBySIDTID(params);
+		request.setAttribute("GRADE", grade);
+		Student g=iStudentService.selectView(sid);	
+		request.setAttribute("STUDENT", g);
+		return "updateGrade";
+	}
+	@RequestMapping(value="/doUpdateGrade")
+	public void doUpdateGrade(Integer tid,Integer sid,Double chengji1,HttpServletResponse response){
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("text/html");
+		Teacher t=new Teacher();
+		t.setTid(tid);
+		Student s=new Student();
+		s.setSid(sid);
+		String a;
+		int num=0;
+		Grade g=new Grade();
+		g.setTeacher(t);
+		g.setStudent(s);
+		g.setChengji(chengji1);
+		boolean rs=iGradeService.updateGradeBySID(g);
+		try {
+			PrintWriter out = response.getWriter();
+			if(rs){
+				out.write("<script>alert('修改成功!');location.href='toGradeList.do'</script>");
+			}else{
+				out.write("<script>alert('修改失败!');location.href='toUpdateGrade.do'</script>");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	@RequestMapping(value="/toQueryGrade")
+	public String toQueryGrade(HttpServletRequest request,Integer sid){
+		List<Grade> gList=iGradeService.selectGradeCJBySID(sid);
+		Student stu=iStudentService.selectView(sid);
+		request.setAttribute("GRADE_LIST", gList);
+		request.setAttribute("STUDENT", stu);
+		return "queryGrade";
+	}
+	@RequestMapping(value="/doDeleteGrade")
+	public void doDeleteGrade(String sids,HttpServletResponse response){
+		String[] strings = sids.split(",");
+		int num=0;
+		if(!sids.equals("")){
+			for(int i=0;i<strings.length;i++){
+				String a=strings[i].substring(0,1);
+				String b=strings[i].substring(2,3);
+				Map<String,Integer> map=new HashMap<String, Integer>();
+				map.put("sid", Integer.parseInt(a));
+				map.put("tid", Integer.parseInt(b));
+				boolean rs=iGradeService.deleteGrade(map);
+				if(rs){
+					num++;
+				}
+			}
+			try {
+				PrintWriter out=response.getWriter();
+				if(num==strings.length){
+					out.write("true");
+				}else{
+					out.write("false");
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
+	//校验部分
+	@RequestMapping(value="/checkTid")
+	public void checkTid(HttpServletResponse response,Integer tid){
+		Grade g=iGradeService.checkTid(tid);
+		try {
+			PrintWriter out=response.getWriter();
+			if(g!=null){
+				out.write("true");
+			}else{
+				out.write("false");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@RequestMapping(value="/checkSid")
+	public void checkSid(HttpServletResponse response,Integer sid){
+		Grade g=iGradeService.checkSid(sid);
+		try {
+			PrintWriter out=response.getWriter();
+			if(g!=null){
+				out.write("true");
+			}else{
+				out.write("false");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@RequestMapping(value="/checkAllid")
+	public void checkAllid(HttpServletResponse response,Integer sid,Integer tid){
+		Map<String,Integer> map=new HashMap<String, Integer>();
+		map.put("sid", sid);
+		map.put("tid", tid);
+		boolean b=iGradeService.checkAllid(map);
+		try {
+			response.getWriter().write(b+"");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	//三级联动
+	@RequestMapping(value="/checkZhuanYeByXY")
+	public void checkZhuanYeByXY(HttpServletResponse response,Integer xid){
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("text/html");
+		List<ZhuanYe> zyList=iZhuanYeService.selectZhuanYeByxid(xid);
+		try {
+			PrintWriter out=response.getWriter();
+			JSONArray ja=JSONArray.fromObject(zyList);
+			out.write(ja.toString());
+			out.flush();
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	@RequestMapping(value="/checkBanjiByZY")
+	public void checkBanjiByZY(HttpServletResponse response,Integer xid){
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("text/html");
+		List<Banji> bjList=banjiService.selectBanjiByXid(xid);
+		try {
+			PrintWriter out=response.getWriter();
+			JSONArray ja=JSONArray.fromObject(bjList);
+			out.write(ja.toString());
+			out.flush();
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+}

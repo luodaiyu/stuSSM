@@ -1,0 +1,22 @@
+package cn.ssm.mapper.banji;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import cn.ssm.entity.banji.Banji;
+
+@Repository(value="iBanjiMapper")
+public interface IBanjiMapper {
+	
+	public List<Banji> selectAll();
+	
+	public Banji getBanjiBYid(int id);
+	
+	public int deleteBanjiBYid(int id);
+	
+	public int deleteBanji(List<String> list);
+	 
+	public int insertBanji(Banji bj);
+
+}

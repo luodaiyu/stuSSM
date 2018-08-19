@@ -1,0 +1,49 @@
+package cn.ssm.entity.teacher;
+
+import cn.ssm.entity.xueyuan.XueYuan;
+
+public class Teacher {
+
+	private int tid;
+	private String tName;
+	private String className;
+	private int xid;
+	private XueYuan xueyuan;
+	
+	
+	
+	
+	public XueYuan getXueyuan() {
+		return xueyuan;
+	}
+	public void setXueyuan(XueYuan xueyuan) {
+		this.xueyuan = xueyuan;
+	}
+	public String gettName() {
+		return tName;
+	}
+	public int getTid() {
+		return tid;
+	}
+	public void setTid(int tid) {
+		this.tid = tid;
+	}
+	public void settName(String tName) {
+		this.tName = tName;
+	}
+	public String getClassName() {
+		return className;
+	}
+	public void setClassName(String className) {
+		this.className = className;
+	}
+	public int getXid() {
+		return xid;
+	}
+	public void setXid(int xid) {
+		this.xid = xid;
+	}
+	
+	
+	
+}

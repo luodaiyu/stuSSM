@@ -1,0 +1,21 @@
+package cn.ssm.service.menu.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import cn.ssm.entity.menu.Menu;
+import cn.ssm.mapper.menu.IMenuMapper;
+import cn.ssm.service.menu.IMenuService;
+@Service(value="iMenuService")
+public class MenuServiceImpl implements IMenuService{
+	@Autowired
+	private IMenuMapper iMenuMapper;
+	@Override
+	public List<Menu> selectMenuByRID(int rid) {
+		
+		return iMenuMapper.selectMenuByRID(rid);
+	}
+
+}

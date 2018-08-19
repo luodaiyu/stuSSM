@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+    <mapper namespace="cn.ssm.mapper.grade.IGradeMapper">
+    	<resultMap type="cn.ssm.entity.grade.Grade" id="GradeMap">
+    		<result column="chengji" property="chengji" jdbcType="DECIMAL"/>
+    		<result column="kemus" property="kemus" jdbcType="DECIMAL"/>
+    		<result column="cjsum" property="cjsum" jdbcType="DECIMAL"/>
+	    	<association property="banji" javaType="cn.ssm.entity.banji.Banji">
+	    		<result column="bid" property="bid" jdbcType="INTEGER"/>
+	      		<result column="bName" property="bname" jdbcType="VARCHAR"/>
+	    	</association>
+	    	
+	    	<association property="xueyuan" javaType="cn.ssm.entity.xueyuan.XueYuan">
+				<id column="xid" property="xid"/>
+				<result column="xName" property="xName"/>
+			</association>
+			
+			<association property="teacher" javaType="cn.ssm.entity.teacher.Teacher">
+				<id column="tid" property="tid" jdbcType="INTEGER"/>
+				<result column="tName" property="tName" jdbcType="VARCHAR"/>
+				<result column="className" property="className" jdbcType="VARCHAR"/>
+			</association>
+			
+	      	<association property="zhuanye" javaType="cn.ssm.entity.zhuanye.ZhuanYe">
+	      		<id column="zid" property="zid" jdbcType="INTEGER"/>
+				<result column="zName" property="zName" jdbcType="VARCHAR"/>
+	      	</association>
+	      	
+	      	<association property="student" javaType="cn.ssm.entity.student.Student">
+	      		<id column="sid" property="sid" jdbcType="INTEGER"/>
+	      		<result column="sName" property="sName" jdbcType="VARCHAR"/>
+	      		<result column="sex" property="sex" jdbcType="VARCHAR"/>
+	      	</association>
+    	</resultMap>
+    	
+    	<resultMap type="cn.ssm.entity.grade.GradeList" id="QueryMap">
+    		<result column="sid" property="sid" jdbcType="INTEGER"/>
+    		<result column="tid" property="tid" jdbcType="INTEGER"/>
+    		<result column="sName" property="sName" jdbcType="VARCHAR"/>
+    		<result column="sex" property="sex" jdbcType="VARCHAR"/>
+    		<result column="className" property="kec" jdbcType="DOUBLE"/>
+    		<result column="chengji" property="chengji" jdbcType="DECIMAL"/>
+    		<result column="bName" property="bName" jdbcType="VARCHAR"/>
+    	</resultMap>
+    				
+    	<select id="selectGradeList" resultMap="QueryMap" resultType="List" parameterType="java.util.Map">
+    		SELECT c.*,b.bName FROM (SELECT a.*,t.className FROM (SELECT g.*,s.`sName`,s.`sex`,s.`bid`,s.`zid`,s.`xid` FROM s_grade g,s_student s WHERE g.`sid`=s.`sid`) AS a,s_teacher t WHERE a.tid=t.tid) AS c,s_banji b WHERE b.bid=c.bid 
+    		<if test="id1!=0">
+    			and c.xid=#{id1}
+    		</if>
+    		<if test="id2!=0">
+    			and c.zid=#{id2}
+    		</if>
+    		<if test="id3!=0">
+    			and c.bid=#{id3}
+    		</if>	 
+    	</select> 
+    	
+    	
+    	<insert id="insertGrade" parameterType="cn.ssm.entity.grade.Grade" >
+    		INSERT INTO s_grade(tid,sid,chengji) VALUES(#{teacher.tid},#{student.sid},#{chengji})
+    	</insert> 
+    	
+    	<select id="selectGradeCJBySIDTID" parameterType="Map" resultMap="QueryMap">
+    		SELECT g.*,t.`className` FROM s_grade g,s_teacher t WHERE g.`tid`=t.`tid` AND g.`sid`=#{sid} AND g.`tid`=#{tid}
+    	</select>
+    	
+    	 <update id="updateGradeBySID" parameterType="cn.ssm.entity.grade.Grade">
+    		UPDATE s_grade SET chengji=#{chengji} where tid=#{teacher.tid} and sid=#{student.sid}
+    	</update>
+    	
+    	<select id="selectGradeCJBySID" parameterType="Integer" resultMap="GradeMap" resultType="List">
+    		SELECT g.*,t.className,s.sName FROM (SELECT *FROM s_grade WHERE sid=#{sid}) AS g,s_teacher t,s_student s WHERE t.tid=g.tid AND s.sid=g.sid
+    	</select>
+    	
+        <delete id="deleteGrade" parameterType="Map">
+    		DELETE FROM s_grade WHERE tid=#{tid} and sid=#{sid}
+    	</delete>
+    	
+    	<!-- 校验部分 -->
+    	<select id="checkTid" parameterType="Integer" resultMap="GradeMap">
+    		SELECT *FROM s_teacher WHERE tid=#{tid}
+    	</select>
+    	<select id="checkSid" parameterType="Integer" resultMap="GradeMap">
+    		SELECT *FROM s_student WHERE sid=#{sid}
+    	</select>
+    	<select id="checkAllid" parameterType="java.util.Map" resultMap="QueryMap">
+    		SELECT *FROM s_grade WHERE tid=#{tid} and sid=#{sid}
+    	</select>
+    	
+    	
+    </mapper>
+    
+    

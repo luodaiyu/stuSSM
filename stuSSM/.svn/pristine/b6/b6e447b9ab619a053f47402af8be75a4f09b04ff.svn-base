@@ -1,0 +1,14 @@
+package cn.ssm.service.zhuanye;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import cn.ssm.entity.zhuanye.ZhuanYe;
+
+public interface IZhuanYeService {
+	public List<ZhuanYe> selectZhuanYeList();
+	public boolean insertZhuanYe(ZhuanYe zhuanye);
+	public ZhuanYe selectZhuanYeByName(String zName);
+}
+

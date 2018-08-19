@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="cn.ssm.mapper.banji.IBanjiMapper">
+   <resultMap type="cn.ssm.entity.banji.Banji" id="BanjiResultMap">
+      <result column="bid" property="bid" jdbcType="INTEGER"/>
+      <result column="bName" property="bname" jdbcType="VARCHAR"/>
+      <result column="bcapacity" property="bcapacity" jdbcType="INTEGER"/>
+      <result column="bnop" property="bnop" jdbcType="INTEGER"/>
+      <association property="xueyuan" javaType="cn.ssm.entity.xueyuan.XueYuan">
+         <id column="xid" property="xid"/>
+         <result column="xName" property="xName"/>
+      </association>
+   </resultMap>
+  <select id="selectAll" resultMap="BanjiResultMap">
+      SELECT bid,bName,xName FROM s_banji b,s_xueyuan Y WHERE b.`xid`=y.`xid`
+  </select>
+  <select id="getBanjiBYid" parameterType="int" resultMap="BanjiResultMap">
+      SELECT bid,bName,xName,bcapacity,bnop FROM s_banji b,s_xueyuan Y WHERE b.`xid`=y.xid and bid=#{id} 
+  </select>
+  <delete id="deleteBanjiBYid" parameterType="int">
+      delete from s_banji where bid=#{id}
+  </delete>
+  <delete id="deleteBanji" parameterType="List">
+       delete from s_banji where bid in(
+         <foreach collection="list" item="entity" separator=",">
+           #{entity}
+         </foreach>
+       )
+  </delete>
+    <insert id="insertBanji" parameterType="cn.ssm.entity.banji.Banji">
+      insert into s_banji (bName,bnop,xid) values(#{bname},#{bnop},#{xueyuan.xid})
+   </insert> 
+   <select id="getBanjiBYname" parameterType="cn.ssm.entity.banji.Banji" resultMap="BanjiResultMap">
+      select bName from s_banji where bName=#{bname}
+      <if test="#{bid!=0}">
+        and bid !=#{bid}
+      </if>
+   </select>
+   <update id="updateBanji" parameterType="cn.ssm.entity.banji.Banji">
+      update s_banji set bName=#{bname},xid=#{xueyuan.xid},bnop=#{bnop} where bid=#{bid}
+   </update>
+</mapper>

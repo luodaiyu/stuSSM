@@ -1,0 +1,19 @@
+package cn.ssm.service.employee.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import cn.ssm.entity.employee.Employee;
+import cn.ssm.mapper.employee.IEmployeeMapper;
+import cn.ssm.service.employee.IEmployeeService;
+@Service(value="iEmployeeService")
+public class EmployeeServiceImpl implements IEmployeeService{
+	@Autowired
+	private IEmployeeMapper iEmployeeMapper;
+	@Override
+	public Employee denglu(Employee e) {
+		
+		return iEmployeeMapper.denglu(e);
+	}
+
+}

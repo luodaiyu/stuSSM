@@ -1,0 +1,12 @@
+package cn.ssm.service.employee;
+
+import java.util.List;
+
+import cn.ssm.entity.employee.Employee;
+
+public interface IEmployeeService {
+
+	public Employee denglu(Employee e);
+	
+	public List<Employee> selectEmployeeAll();
+}

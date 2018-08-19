@@ -1,0 +1,28 @@
+package cn.ssm.controller.student;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import cn.ssm.entity.student.Student;
+import cn.ssm.service.student.IStudentService;
+
+
+@Controller
+public class StudentController {
+	
+	@Autowired
+	private IStudentService studentService;
+	
+	@RequestMapping(value="toStudentList")
+	public String toStudentList(HttpServletRequest req){
+		List<Student> slist=studentService.selectAll();
+		req.setAttribute("StudentList", slist);
+		return "studentlist";
+	}
+
+}

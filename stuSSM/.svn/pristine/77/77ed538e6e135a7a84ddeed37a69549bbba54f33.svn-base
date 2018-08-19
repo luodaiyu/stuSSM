@@ -1,0 +1,60 @@
+package cn.ssm.controller.zhuanye;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import cn.ssm.entity.zhuanye.ZhuanYe;
+import cn.ssm.service.zhuanye.IZhuanYeService;
+@Controller
+public class ZhuanYeController {
+	@Autowired
+	private IZhuanYeService iZhuanYeService;
+	
+	@RequestMapping(value="/toZhuanYeList")
+	public String toZhuanYeList(){
+		List<ZhuanYe> zyList=iZhuanYeService.selectZhuanYeList();
+		for(ZhuanYe as:zyList){
+			System.out.println(as);
+		}
+		System.out.println(zyList.size());
+		return "zhuanyeList";
+	}
+	@RequestMapping("/toAddZhuanYe")
+	public String toAddZhuanYe(){
+		return "addZhuanYe";
+	}
+	@RequestMapping(value="/checkzName")
+	public void checkzName(String zName,HttpServletResponse response){
+		ZhuanYe zhuanye=iZhuanYeService.selectZhuanYeByName(zName);
+		try {
+			PrintWriter out=response.getWriter();
+			if(zhuanye==null){
+				out.write("false");
+			}else{
+				out.write("true");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	@RequestMapping(value="/doAddZhuanYe")
+	public void doAddZhuanYe(String zName,HttpServletResponse response){
+		ZhuanYe zhuanye=new ZhuanYe();
+		zhuanye.setzName(zName);
+		boolean rs=iZhuanYeService.insertZhuanYe(zhuanye);
+		System.out.println(rs);
+		try {
+			response.getWriter().write(rs+"");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+}

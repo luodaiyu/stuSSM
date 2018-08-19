@@ -1,0 +1,43 @@
+package cn.ssm.service.banji.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import cn.ssm.entity.banji.Banji;
+import cn.ssm.mapper.banji.IBanjiMapper;
+import cn.ssm.service.banji.IBanjiService;
+
+@Service(value="banjiService")
+public class BanjiService implements IBanjiService {
+    
+	@Autowired
+	private IBanjiMapper iBanjiMapper;
+	@Override
+	public boolean insertBanji(Banji bj) {
+		
+		return iBanjiMapper.insertBanji(bj)>0?true:false;
+	}
+	@Override
+	public List<Banji> selectAll() {
+		
+		return iBanjiMapper.selectAll();
+	}
+	@Override
+	public Banji getBanjiBYid(int id) {
+		
+		return iBanjiMapper.getBanjiBYid(id);
+	}
+	@Override
+	public boolean deleteBanjiBYid(int id) {
+		
+		return iBanjiMapper.deleteBanjiBYid(id)>0?true:false;
+	}
+	@Override
+	public boolean deleteBanji(List<String> list) {
+		
+		return iBanjiMapper.deleteBanji(list)>0?true:false;
+	}
+
+}

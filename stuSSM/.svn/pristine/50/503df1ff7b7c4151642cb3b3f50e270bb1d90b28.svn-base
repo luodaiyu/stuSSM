@@ -1,0 +1,10 @@
+package cn.ssm.mapper.employee;
+
+import org.springframework.stereotype.Repository;
+
+import cn.ssm.entity.employee.Employee;
+@Repository(value="iEmployeeMapper")
+public interface IEmployeeMapper {
+
+	public Employee denglu(Employee e);
+}

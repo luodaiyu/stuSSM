@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+
+<mapper namespace="cn.ssm.mapper.xueyuan.IXueYuanMapper">
+	<resultMap type="cn.ssm.entity.xueyuan.XueYuan" id="XueYuanResultMap">
+		<id column="xid" property="xid" jdbcType="INTEGER"/>
+		<result column="xName" property="xName" jdbcType="VARCHAR"/>
+		<result column="url" property="url" jdbcType="VARCHAR"/>
+		<result column="isdelete" property="isdelete" jdbcType="INTEGER"/>
+		
+	</resultMap>
+		<select id="selectXueYuanAll"  resultMap="XueYuanResultMap" resultType="List">
+			SELECT * FROM s_xueyuan WHERE isdelete=0
+		</select>
+		
+	 	<insert id="insertXueYuan" parameterType="cn.ssm.entity.xueyuan.XueYuan"> 
+ 			INSERT INTO s_xueyuan(xName) VALUE(#{xName}) 
+		</insert> 
+	
+	 	<update id="delXueYuan" parameterType="INTEGER"> 
+	 		UPDATE s_xueyuan SET isdelete=1 WHERE xid=#{xid} 
+	 	</update> 
+		
+	 	<update id="updateXueYuan" parameterType="cn.ssm.entity.xueyuan.XueYuan"> 
+	 		UPDATE s_xueyuan SET xName=#{xName} WHERE xid=#{xid}
+	 	</update> 
+		
+	 	<select id="getXueYuanById" parameterType="INTEGER" resultMap="XueYuanResultMap"> 
+	 		SELECT * FROM s_xueyuan WHERE xid=#{xid}
+	 	</select>
+	 	
+	 	<delete id="delXueYuans" parameterType="List">
+		DELETE FROM S_XUEYUAN WHERE XID IN (
+		<foreach collection="list" item="entity" separator=",">#{entity}</foreach>
+		)
+		</delete>
+</mapper>

@@ -1,0 +1,24 @@
+package cn.ssm.service.student.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import cn.ssm.entity.student.Student;
+import cn.ssm.mapper.student.IStudentMapper;
+import cn.ssm.service.student.IStudentService;
+
+@Service(value="studentService")
+public class StudentService implements IStudentService {
+    
+	@Autowired
+	private IStudentMapper iStudentMapper;
+	
+	@Override
+	public List<Student> selectAll() {
+		
+		return iStudentMapper.selectAll();
+	}
+
+}

@@ -1,0 +1,24 @@
+package cn.ssm.mapper.grade;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Repository;
+
+import cn.ssm.entity.grade.Grade;
+import cn.ssm.entity.grade.GradeList;
+import cn.ssm.entity.zhuanye.ZhuanYe;
+import cn.ssm.page.Page;
+@Repository(value="iGradeMapper")
+public interface IGradeMapper {
+	public List<Grade> selectGradeList(Map<String,Integer> params,Page page);
+	public List<Grade> selectGradeAll();
+	public int insertGrade(Grade grade);
+	public int updateGradeBySID(Grade grade);
+	public GradeList selectGradeCJBySIDTID(Map<String,Integer> params);
+	public List<Grade> selectGradeCJBySID(int sid);
+	public int deleteGrade(Map<String,Integer> map);
+	public Grade checkTid(int tid);
+	public Grade checkSid(int sid);
+	public GradeList checkAllid(Map<String,Integer> map);
+}

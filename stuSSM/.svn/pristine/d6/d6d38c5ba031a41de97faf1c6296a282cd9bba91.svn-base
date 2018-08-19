@@ -1,0 +1,40 @@
+package cn.ssm.service.zhuanye.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import cn.ssm.entity.zhuanye.ZhuanYe;
+import cn.ssm.mapper.zhuanye.IZhuanYeMapper;
+import cn.ssm.service.zhuanye.IZhuanYeService;
+@Service(value="iZhuanYeService")
+public class ZhuanYeServiceImpl implements IZhuanYeService {
+	@Autowired
+	private IZhuanYeMapper iZhuanYeMapper;
+	@Override
+	public List<ZhuanYe> selectZhuanYeList() {
+		return iZhuanYeMapper.selectZhuanYeList();
+	}
+	@Override
+	public boolean insertZhuanYe(ZhuanYe zhuanye) {
+		return iZhuanYeMapper.insertZhuanYe(zhuanye)>0?true:false;
+	}
+	@Override
+	public ZhuanYe selectZhuanYeByName(String zName) {
+		return iZhuanYeMapper.selectZhuanYeByName(zName);
+	}
+	@Override
+	public ZhuanYe selectZhuanYeByID(int zid) {
+		return iZhuanYeMapper.selectZhuanYeByID(zid);
+	}
+	@Override
+	public boolean updateZhuanYe(ZhuanYe zhuanye) {
+		return iZhuanYeMapper.updateZhuanYe(zhuanye)>0?true:false;
+	}
+	@Override
+	public boolean deleteZhuanYe(List<String> sList) {
+		return iZhuanYeMapper.deleteZhuanYe(sList)>0?true:false;
+	}
+
+}

@@ -1,0 +1,128 @@
+package cn.ssm.controller.employee;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.interfaces.RSAKey;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import cn.ssm.entity.employee.Employee;
+import cn.ssm.entity.role.Role;
+import cn.ssm.service.employee.IEmployeeService;
+import cn.ssm.service.role.IRoleService;
+
+@Controller
+public class EmployeeController {
+
+	@Autowired
+	private IEmployeeService iEmployeeService;
+	@Autowired
+	private IRoleService iRoleService; 
+	@RequestMapping("/login")
+	public void login(Employee e,HttpServletRequest request,HttpServletResponse response,HttpSession session){		
+		Employee em = iEmployeeService.denglu(e);
+		if(em != null){
+			session.setAttribute("EMPLOYEE", em);
+			try {
+				response.getWriter().write("true");			
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}else{
+			try {
+				response.getWriter().write("false");
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+		
+	}
+	@RequestMapping("/selectEmployee")
+	public String selectEmployee(HttpServletRequest request,Employee e){
+		List<Employee> li = iEmployeeService.selectEmployeeAll(e);
+		request.setAttribute("EMPLOYEE_LIST", li);
+		return "employeeList";
+	}
+	@RequestMapping("/toinsertEmployee")
+	public String toinsertEmployee(HttpSession session){
+		List<Role> list = iRoleService.selectAll();
+		session.setAttribute("ROLE",list);
+		return "addEmployee";
+	}
+	@RequestMapping("/doinsertEmployee")
+	public void doinsertEmployee(Employee e,HttpServletResponse response){
+		boolean rs = iEmployeeService.insertEmployee(e);
+		try {
+			response.getWriter().write(rs+"");
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+	}
+	@RequestMapping("/dodeleteEmployee")
+	public void dodeleteEmployee(String ids,HttpServletResponse response){
+		String[] strings = ids.split(",");
+		List<String> li = new ArrayList<String>();
+		for(int i = 0; i < strings.length; i++){
+			li.add(strings[i]);
+		}
+		boolean rs = iEmployeeService.deleteEmployee(li);
+		try {
+			response.getWriter().write(rs+"");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	@RequestMapping("/dodeleteEmployeeOne")
+	public void dodeleteEmployeeOne(int id,HttpServletResponse response,HttpServletRequest request){
+		try {
+			request.setCharacterEncoding("utf-8");
+			response.setCharacterEncoding("utf-8");
+			response.setContentType("text/html");
+		} catch (UnsupportedEncodingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		boolean rs = iEmployeeService.deleteEmployeeOne(id);
+		if(rs){
+    		try {
+				response.getWriter().write("<script>alert('删除成功');location.href='selectEmployee.do';</script>");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+    	}else{
+    		try {
+				response.getWriter().write("<script>alert('删除失败');location.href='selectEmployee.do';</script>");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+    	}
+	}
+	@RequestMapping("/toupdateEmployee")
+	public String toupdateEmployee(int id,HttpServletRequest request){
+		Employee employee = iEmployeeService.getEmployeeByID(id);
+		request.setAttribute("Employee", employee);
+		List<Role> li = iRoleService.selectAll(); 
+		
+		request.setAttribute("Role", li);
+		return "xiugaiEmployee";
+	}
+	@RequestMapping("/doupdateEmployee")
+	public void doupdateEmployee(Employee e,HttpServletResponse response){
+		boolean rs = iEmployeeService.updateEmployee(e);
+		try {
+			response.getWriter().write(rs+"");
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+}

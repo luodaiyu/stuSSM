@@ -1,0 +1,15 @@
+package cn.ssm.service.student;
+
+import java.util.List;
+
+import cn.ssm.entity.student.Student;
+
+public interface IStudentService {
+	
+	public List<Student> selectAll();
+	
+	public Student selectView(int id);
+	
+	public boolean deleteBYid(int id);
+
+}

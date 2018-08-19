@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+    version="2.0">
+    
+  <description>PAGE 1.1</description>
+  <display-name>PAGE core</display-name>
+  <tlib-version>1.1</tlib-version>
+  <short-name>p</short-name>
+  <uri>http://page.com</uri>
+  <tag>
+  	<name>page</name>
+  	<tag-class>cn.tag.PageTag</tag-class>
+  	<body-content>empty</body-content>
+  	<attribute>
+  		<name>url</name>
+  		<required>true</required>
+  		<rtexprvalue>true</rtexprvalue>
+  	</attribute>
+  	<attribute>
+  		<name>page</name>
+  		<required>true</required>
+  		<rtexprvalue>true</rtexprvalue>
+  	</attribute>
+  	<attribute>
+  		<name>paramter</name>
+  		<required>true</required>
+  		<rtexprvalue>true</rtexprvalue>
+  	</attribute>
+  </tag>
+ </taglib> 

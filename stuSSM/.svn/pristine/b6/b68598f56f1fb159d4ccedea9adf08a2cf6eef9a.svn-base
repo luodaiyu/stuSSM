@@ -1,0 +1,48 @@
+package cn.ssm.controller.employee;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import cn.ssm.entity.employee.Employee;
+import cn.ssm.service.employee.IEmployeeService;
+
+@Controller
+public class EmployeeController {
+
+	@Autowired
+	private IEmployeeService iEmployeeService;
+	@RequestMapping("/login")
+	public void login(Employee e,HttpServletRequest request,HttpServletResponse response,HttpSession session){		
+		Employee em = iEmployeeService.denglu(e);
+		if(em != null){
+			session.setAttribute("EMPLOYEE", em);
+			try {
+				response.getWriter().write("true");			
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}else{
+			try {
+				response.getWriter().write("false");
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+		
+	}
+	@RequestMapping("/selectEmployee")
+	public String selectEmployee(HttpServletRequest request){
+		List<Employee> li = iEmployeeService.selectEmployeeAll();
+		request.setAttribute("EMPLOYEE_LIST", li);
+		return "employeeList";
+	}
+	
+}

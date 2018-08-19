@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.ssm.mapper.zhuanye.IZhuanYeMapper">
+	<resultMap type="cn.ssm.entity.zhuanye.ZhuanYe" id="ZhuanYeMap">
+		<id column="zid" property="zid" jdbcType="INTEGER"/>
+		<result column="zName" property="zName" jdbcType="VARCHAR"/>
+		<association property="xueyuan" javaType="cn.ssm.entity.xueyuan.XueYuan">
+			<id column="xid" property="xid"/>
+			<result column="xName" property="xName"/>
+			<result column="isdelete" property="isdelete"/>
+		</association>
+	</resultMap>
+	<select id="selectZhuanYeList" resultMap="ZhuanYeMap" resultType="List">
+		SELECT z.`zid`,z.`zName`,s.* FROM s_zhuanye z,s_xueyuan s WHERE z.`xid`=s.`xid` AND s.`isdelete`=0
+	</select>
+	<insert id="insertZhuanYe" parameterType="cn.ssm.entity.zhuanye.ZhuanYe">
+		INSERT INTO s_zhuanye(zName,xid) VALUES(#{zName},#{xueyuan.xid})
+	</insert>
+	
+	<select id="selectZhuanYeByName" parameterType="String" resultMap="ZhuanYeMap">
+		SELECT *FROM s_zhuanye where zName=#{zName}
+	</select>
+	
+	<select id="selectZhuanYeByID" parameterType="Integer" resultMap="ZhuanYeMap">
+		SELECT *FROM s_zhuanye z,s_xueyuan s WHERE zid=#{zid} and z.`xid`=s.`xid` AND s.`isdelete`=0 
+	</select>
+	<update id="updateZhuanYe" parameterType="cn.ssm.entity.zhuanye.ZhuanYe">
+		UPDATE s_zhuanye SET zName=#{zName},xid=#{xueyuan.xid} where zid=#{zid}
+	</update>
+	<delete id="deleteZhuanYe" parameterType="List">
+		DELETE FROM s_zhuanye WHERE zid IN(
+		<foreach separator="," item="entity" collection="list">
+			#{entity} 
+		</foreach>
+		)
+	</delete>
+	
+</mapper>

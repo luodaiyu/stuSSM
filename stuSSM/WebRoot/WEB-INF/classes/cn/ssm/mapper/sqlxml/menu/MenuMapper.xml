@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.ssm.mapper.menu.IMenuMapper">
+	<resultMap type="cn.ssm.entity.menu.Menu" id="MenuResultMap">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="menuName" property="menuName" jdbcType="VARCHAR"/>
+		<result column="pid" property="pid" jdbcType="INTEGER"/>
+		<result column="icon" property="icon" jdbcType="VARCHAR"/>
+		<result column="url" property="url" jdbcType="VARCHAR"/>
+	</resultMap>
+	<select id="selectMenuByRID" resultMap="MenuResultMap" resultType="cn.ssm.entity.menu.Menu" parameterType="Integer">
+		SELECT m.* FROM s_menu m,s_role_menu rm WHERE m.id=rm.mid AND rm.rid=#{rid}
+	</select>
+	
+	<select id="selectMenuAll" resultMap="MenuResultMap" resultType="List">
+		SELECT * FROM s_menu 
+	</select>
+	
+	<delete id="delMenu" parameterType="Integer" >
+		DELETE FROM s_menu WHERE id=#{id}
+	</delete>
+	
+	<insert id="addMenu" parameterType="cn.ssm.entity.menu.Menu" >
+		INSERT INTO s_menu(menuName,pid,url) VALUES(#{menuName},#{pid},#{url})
+	</insert>
+	
+	<select id="getMenuById" parameterType="Integer" resultMap="MenuResultMap" resultType="cn.ssm.entity.menu.Menu">
+		SELECT * FROM s_menu WHERE id=#{id}
+	</select>
+	
+	<update id="updateMenu" parameterType="cn.ssm.entity.menu.Menu">
+		UPDATE s_menu SET menuName=#{menuName},url=#{url},pid=#{pid} WHERE id=#{id}
+	</update>
+	
+	<delete id="delMenus" parameterType="List">
+		DELETE FROM S_MENU WHERE ID IN (
+	<foreach collection="list" item="entity" separator=",">#{entity}</foreach>
+		)
+	</delete>
+</mapper>

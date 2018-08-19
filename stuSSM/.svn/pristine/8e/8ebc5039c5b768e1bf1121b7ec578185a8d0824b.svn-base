@@ -1,0 +1,14 @@
+package cn.ssm.mapper.student;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import cn.ssm.entity.student.Student;
+
+@Repository(value="iStudentMapper")
+public interface IStudentMapper {
+	
+	public List<Student> selectAll();
+
+}

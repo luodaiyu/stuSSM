@@ -1,0 +1,8 @@
+package cn.ssm.service.employee;
+
+import cn.ssm.entity.employee.Employee;
+
+public interface IEmployeeService {
+
+	public Employee denglu(Employee e);
+}
